@@ -54,13 +54,13 @@ function App() {
       <div className="App">
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/">Dashboard</Link>
           </li>
           <li>
             <Link to="/admin-panel">Admin Page</Link>
           </li>
           <li>
-            <Link to="/user-panel">User Page</Link>
+            s<Link to="/user-panel">User Page</Link>
           </li>
           {!user.type ? (
             <li>
