@@ -13,7 +13,7 @@ const HomePage = () => {
     <ul>
       <li>Both View</li>
       {user.type === "admin" && <li>Admin View</li>}
-      {user.type === "user" && <li>User View</li>}
+      <li>User View</li>
     </ul>
   );
 };
