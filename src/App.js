@@ -1,3 +1,4 @@
+import axios from "axios";
 import UserContext, { UserProvider } from "context/UserContext";
 import NotFound from "pages/NotFound";
 import React, { lazy, Suspense, useContext } from "react";
@@ -7,17 +8,23 @@ import { Link } from "react-router-dom";
 function PrivateRoute({ children, access, ...rest }) {
   const { user } = useContext(UserContext);
 
-  console.log(user);
-
   return (
     <Route {...rest}>
-      {access.includes(user.type) ? children : <Redirect to="/404" />}
+      {access.includes(user.userType) ? children : <Redirect to="/404" />}
     </Route>
   );
 }
 
 function App() {
-  const [user, setUser] = React.useState({ type: null });
+  const [user, setUser] = React.useState();
+
+  React.useEffect(() => {
+    axios
+      .post("https://jsonplaceholder.typicode.com/users", {
+        token: localStorage.getItem("token"),
+      })
+      .then((res) => setUser(res.data));
+  }, []);
 
   const routes = [
     {
@@ -52,6 +59,7 @@ function App() {
   return (
     <UserProvider value={{ user, setUser }}>
       <div className="App">
+        {user?.userName && <h2>Hello {user.userName}</h2>}
         <ul>
           <li>
             <Link to="/">Dashboard</Link>
@@ -60,14 +68,20 @@ function App() {
             <Link to="/admin-panel">Admin Page</Link>
           </li>
           <li>
-            s<Link to="/user-panel">User Page</Link>
+            <Link to="/user-panel">User Page</Link>
           </li>
-          {!user.type ? (
+          {!user?.userType ? (
             <li>
               <Link to="/login">Login</Link>
             </li>
           ) : (
-            <li onClick={() => setUser({ type: null })}>
+            <li
+              onClick={() => {
+                localStorage.removeItem("token");
+                window.location.reload();
+                return <Redirect to="/" />;
+              }}
+            >
               <Link to="#">Logout</Link>
             </li>
           )}
@@ -97,7 +111,7 @@ function App() {
               </Suspense>
             </Route>
           ))}
-          {user.type &&
+          {user?.userType &&
             privateRoutes.map(({ path, Component, exact, access }) => (
               <PrivateRoute
                 exact={exact}

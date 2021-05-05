@@ -5,14 +5,14 @@ import { Redirect } from "react-router";
 const HomePage = () => {
   const { user } = useContext(UserContext);
 
-  if (!user.type) {
+  if (!user?.userType) {
     return <Redirect to="/login" />;
   }
 
   return (
     <ul>
       <li>Both View</li>
-      {user.type === "admin" && <li>Admin View</li>}
+      {user?.userType === "admin" && <li>Admin View</li>}
       <li>User View</li>
     </ul>
   );

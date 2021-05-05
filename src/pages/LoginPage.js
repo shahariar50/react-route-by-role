@@ -6,7 +6,7 @@ import { Redirect } from "react-router";
 const LoginPage = () => {
   const { user } = useContext(UserContext);
 
-  if (user.type) {
+  if (user?.userType) {
     return <Redirect to="/" />;
   }
 
